@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS shortener;
+
+USE shortener;
+
+CREATE TABLE IF NOT EXISTS links (
+  id VARCHAR(10) PRIMARY KEY,
+  url TEXT NOT NULL
+);  
