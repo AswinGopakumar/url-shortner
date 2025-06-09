@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>URL Shortener</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 50px; background: #f0f0f0; }
+    input[type="text"] { width: 300px; padding: 8px; }
+    button { padding: 8px 12px; margin-left: 5px; }
+    .result { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>URL Shortener</h1>
+  <input type="text" id="urlInput" placeholder="Enter URL to shorten" />
+  <button onclick="shortenURL()">Shorten</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    async function shortenURL() {
+      const url = document.getElementById('urlInput').value;
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+
+      try {
+        const response = await fetch('/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        if (!response.ok) throw new Error('Error shortening URL');
+
+        const data = await response.json();
+        const shortUrl = data.shortUrl.startsWith('http') ? data.shortUrl : 'http://' + data.shortUrl;
+
+        document.getElementById('result').innerHTML = `
+          Shortened URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a>
+        `;
+      } catch (err) {
+        console.error(err);
+        alert('Failed to shorten URL');
+      }
+    }
+  </script>
+</body>
+</html>
